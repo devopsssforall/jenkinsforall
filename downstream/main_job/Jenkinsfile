@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: "none", description: 'Enter Target Server Name', name: 'server_name')
+        choice(choices: ['no', 'yes'], description: 'Deploy the code after Testing ?', name: 'deploy_code')
+    }
+
+    environment {
+      project_name ='downstream_job1'
+    }
+
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '16'))
+    }    
+
+stages {
+        stage('Checkout'){
+            steps {
+                sh "echo checkout code"
+            }
+        }
+
+        stage('Build Code'){
+            steps {
+                sh "echo Project name is ${project_name}"
+                sh "echo Enter the Stepts to Build the code"
+            }
+        }
+
+        stage('Push Code to Testing Environment'){
+            steps {
+                 echo 'Enter the Stepts to push the code'
+            }
+        }
+
+        stage('Test the Code'){
+            steps {
+                 echo 'Enter the Stepts to Test the code'
+            }
+        }
+
+
+        stage('Trigerring downstream job - Deploy Code'){
+            when {
+                allOf {
+                    expression { params.deploy_code != 'no' }
+                }
+            }
+            steps {
+                build job: 'pipeline/downstream', \
+                parameters: [string(name: 'server_name', value: String.valueOf(server_name))], \
+                propagate: false
+            }
+        }
+
+    }
+    post {
+        success {
+            echo 'Deployment was successful. Sending notification.'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification.'
+        }
+    }    
+}

@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: "none", description: 'Enter Target Server Name', name: 'server_name')
+    }
+
+    environment {
+      project_name ='downstream_job2'
+    }
+
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '16'))
+    }    
+
+stages {
+        
+        stage('Deploy the Code'){
+            steps {
+                 sh "echo Publishing to ${server_name}"
+                 echo 'Enter the Stepts to Deploy the code'
+            }
+        }
+
+    }
+    post {
+        success {
+            echo 'Deployment was successful. Sending notification.'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification.'
+        }
+    }    
+}
