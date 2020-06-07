@@ -48,7 +48,7 @@ stages {
                 }
             }
             steps {
-                build job: 'pipeline/downstream', \
+                build job: 'downstream/downstream_job', \
                 parameters: [string(name: 'server_name', value: String.valueOf(server_name))], \
                 propagate: false
             }
