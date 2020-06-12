@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    environment {
+      project_name ='upstream_job'
+    }
+
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '16'))
+    }    
+
+    triggers {
+        upstream(upstreamProjects: "upstream/upstream_job", threshold: hudson.model.Result.SUCCESS)
+    }
+
+    stages {
+        stage('Upstream Job'){
+            steps {
+                 echo 'Upstream Job has been trigerred....'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Trigger was successful. Sending notification.'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification.'
+        }
+    }    
+}

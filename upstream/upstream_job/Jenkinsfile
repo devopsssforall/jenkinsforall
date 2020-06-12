@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    environment {
+      project_name ='upstream_job'
+    }
+
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '16'))
+    }    
+
+stages {
+        stage('Checkout'){
+            steps {
+                sh "echo checkout code"
+            }
+        }
+
+        stage('Build Code'){
+            steps {
+                sh "echo Main job is executing"
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Build was successful. Sending notification.'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification.'
+        }
+    }    
+}
