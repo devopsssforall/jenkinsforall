@@ -7,9 +7,14 @@ pipeline {
     }
 
     stages {
+        stage('Checkout code') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Sample Python') {
             steps {
-                dir('agents/label') {
+                dir('agents/label/') {
                     sh 'python hello.py'
                 }
             }
