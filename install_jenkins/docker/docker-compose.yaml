@@ -1,0 +1,37 @@
+version: "3.7"
+
+volumes:
+  jenkins_home:
+
+services:
+  jenkins:
+    container_name: jenkins
+    build: .
+    ports:
+      - 8080:8080
+      - 50001:50001
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JENKINS_SLAVE_AGENT_PORT=50001
+      - JAVA_OPTS="-Djava.awt.headless=true -Dhudson.model.DirectoryBrowserSupport.CSP=\"sandbox allow-same-origin allow-scripts; default-src *; style-src * http://* 'unsafe-inline' 'unsafe-eval'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'; img-src data:;\""
+    networks:
+      - jenkins
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      # - 443:443
+    volumes:
+      - ./site_config.conf:/etc/nginx/conf.d/default.conf
+      # - <path/to/your/certs>:/etc/ssl/private
+    networks:
+      - jenkins
+
+
+networks:
+  jenkins:
+    name: jenkins
