@@ -18,6 +18,9 @@ services:
       - JAVA_OPTS="-Djava.awt.headless=true -Dhudson.model.DirectoryBrowserSupport.CSP=\"sandbox allow-same-origin allow-scripts; default-src *; style-src * http://* 'unsafe-inline' 'unsafe-eval'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'; img-src data:;\""
     networks:
       - jenkins
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
   nginx:
     image: nginx:latest
@@ -30,6 +33,9 @@ services:
       # - <path/to/your/certs>:/etc/ssl/private
     networks:
       - jenkins
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
 
 networks:

@@ -1,0 +1,32 @@
+pipeline {
+    agent { label 'master' }
+
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '15'))
+      skipDefaultCheckout true
+    }
+
+    stages {
+        stage('Sample Python') {
+            steps {
+                dir('agents/label') {
+                    sh 'python hello.py'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Build successful. Slack notification sent to channel '
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification sent to channel '
+        }
+    }
+}
