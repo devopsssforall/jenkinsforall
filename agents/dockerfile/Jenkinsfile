@@ -1,8 +1,8 @@
 pipeline {
     agent {
         dockerfile {
-            filename 'Dockerfile'
-            dir './agents/dockerfile'
+            filename 'agents/dockerfile/Dockerfile'
+            //dir './agents/dockerfile'
             args '-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
         }
     }
