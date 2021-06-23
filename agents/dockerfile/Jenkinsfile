@@ -1,7 +1,7 @@
 pipeline {
     agent {
         dockerfile {
-            filename 'Dockerfile'
+            //filename 'Dockerfile'
             dir './agents/dockerfile'
             args '-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
         }
@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Sample Python') {
             steps {
-                dir('agents/dockerimage/') {
+                dir('agents/dockerfile/') {
                     sh 'python hello.py'
                 }
             }
