@@ -1,9 +1,11 @@
 pipeline {
-    docker { 
-        image 'node:14-alpine'
-        registryUrl ''
-        registryCredentialsId 'DockerHubLogin'
-        args '-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
+    agent {
+        docker {
+            image 'python:alpine'
+            registryUrl ''
+            //registryCredentialsId 'DockerHubLogin'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
+        }
     }
 
     options {
