@@ -27,9 +27,9 @@ pipeline {
         }
     }
     post {
-        always {
-            cleanWs()
-        }
+        // always {
+        //     cleanWs()
+        // }
         success {
             echo 'Build successful. Slack notification sent to channel '
         }
