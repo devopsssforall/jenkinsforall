@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            dir 'agents/dockerfile/'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
+        }
+    }
+
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '15'))
+      skipDefaultCheckout true
+    }
+
+    stages {
+        stage('Checkout code') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Sample Python') {
+            steps {
+                dir('agents/dockerimage/') {
+                    sh 'python hello.py'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Build successful. Slack notification sent to channel '
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification sent to channel '
+        }
+    }
+}
